@@ -1,6 +1,6 @@
 name: CI
 
-on: [ push, pull_request ]
+on: [ push, pull_request, workflow_dispatch ]
 
 jobs:
   build:
@@ -22,3 +22,18 @@ jobs:
         with:
           name: Barrel
           path: target/Barrel-1.0.0-SNAPSHOT.jar
+          
+      - name: Publishing new release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.tag.outputs.release_tag }}
+          name: Barrel
+          body: |
+            This is a development build of Barrel. Highly unstable!
+            
+            
+            Triggered by ${{ github.sha }} at ${{ github.event.repository.updated_at }}
+          #          files: |
+          #            target/Barrel-1.0.0-SNAPSHOT.jar
+          files: |
+                  target/Barrel-1.0.0-SNAPSHOT.jar
